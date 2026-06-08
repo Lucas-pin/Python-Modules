@@ -1,0 +1,39 @@
+class Plant:
+    def __init__(self, name: str = "default",
+                 height: float = 0.0,
+                 age: int = 0) -> None:
+        self.name = name
+        self.height = height
+        self.initial_height = height
+        self.plant_age = age
+
+    def grow(self, height: float) -> None:
+        self.height += height
+        self.total_height = self.height - self.initial_height
+
+    def age(self, age: int = 1):
+        self.plant_age += age
+
+    def show(self) -> None:
+        print(f"{self.name}: {round(self.height, 2)}cm,"
+              f" {self.plant_age} days old")
+
+
+def main() -> None:
+
+    plant_list: list[Plant] = []
+
+    print("=== Plant Factory Output ===")
+    plant_list.append(Plant("Rose", 25.0, 30))
+    plant_list.append(Plant("Oak", 200.0, 365))
+    plant_list.append(Plant("Cactus", 5.0, 90))
+    plant_list.append(Plant("Sunflower", 80.0, 45))
+    plant_list.append(Plant("Fern", 15.0, 120))
+
+    for plant in plant_list:
+        print("Created: ", end='')
+        plant.show()
+
+
+if __name__ == "__main__":
+    main()
