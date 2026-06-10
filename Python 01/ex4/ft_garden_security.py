@@ -4,10 +4,18 @@ class Plant:
                  age: int = 0) -> None:
         self.name = name
         self.set_height(height)
+        self._initial_height = self._height
         self.set_age(age)
 
+    def grow(self, height: float) -> None:
+        self._height += height
+        self.total_height = self._height - self._initial_height
+
+    def age(self, age: int = 1) -> None:
+        self._plant_age += age
+
     def show(self) -> None:
-        print(f"{self.name}: {round(self._height, 2)}cm,"
+        print(f"{self.name}: {round(self._height, 1)}cm, "
               f"{self._plant_age} days old")
 
     def get_height(self) -> float:
