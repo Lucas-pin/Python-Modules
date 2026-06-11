@@ -22,48 +22,39 @@ class Plant:
         return self._height
 
     def set_height(self, height: float) -> None:
-        if (height > 0):
+        if (height >= 0):
             self._height = height
         elif (height < 0):
-            raise ValueError("Error, height can't be negative")
+            print("Error, height can't be negative")
 
     def get_age(self) -> int:
         return self._plant_age
 
     def set_age(self, age: int) -> None:
-        if (age > 0):
+        if (age >= 0):
             self._plant_age = age
         elif (age < 0):
-            raise ValueError("Error, age can't be negative")
+            print("Error, age can't be negative")
 
 
 def main() -> None:
     print("=== Garden Security System ===")
 
-    try:
-        rose: Plant = Plant("Rose", 15.0, 10)
-        print("Plant created: ", end='')
-        rose.show()
-    except ValueError as error:
-        print(f"Plant creation rejected: {error}")
+    rose: Plant = Plant("Rose", 15.0, 10)
+    print("Plant created: ", end='')
+    rose.show()
 
-    try:
-        rose.set_height(25.0)
-        print(f"Height updated: {rose.get_height()}cm\n")
-        rose.set_height(-1.0)
-        print(f"Height updated: {rose.get_height()}cm\n")
-    except ValueError as error:
-        print(f"{rose.name.capitalize()}: {error}")
-        print("Height update rejected\n")
+    rose.set_height(25.0)
+    print(f"\nHeight updated: {rose.get_height()}cm")
+    rose.set_age(30)
+    print(f"Age updated: {rose.get_age()} days\n")
 
-    try:
-        rose.set_age(30)
-        print(f"Age updated: {rose.get_age()}days\n")
-        rose.set_age(-1)
-        print(f"Age updated: {rose.get_age()}days\n")
-    except ValueError as error:
-        print(f"{rose.name.capitalize()}: {error}")
-        print("Age update rejected\n")
+    print(f"{rose.name.capitalize()}: ", end='')
+    rose.set_height(-1.0)
+    print("Height update rejected\n")
+    print(f"{rose.name.capitalize()}: ", end='')
+    rose.set_age(-1)
+    print("Age update rejected\n")
 
     print("Current state: ", end='')
     rose.show()

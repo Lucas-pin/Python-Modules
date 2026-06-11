@@ -22,19 +22,19 @@ class Plant:
         return self._height
 
     def set_height(self, height: float) -> None:
-        if (height > 0):
+        if (height >= 0):
             self._height = height
         elif (height < 0):
-            raise ValueError("Error, height can't be negative")
+            print("Error, height can't be negative")
 
     def get_age(self) -> int:
         return self._plant_age
 
     def set_age(self, age: int) -> None:
-        if (age > 0):
+        if (age >= 0):
             self._plant_age = age
         elif (age < 0):
-            raise ValueError("Error, age can't be negative")
+            print("Error, age can't be negative")
 
 
 class Flower(Plant):
