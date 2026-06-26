@@ -1,4 +1,18 @@
 class Plant:
+
+    '''A Plant class that stores information about a plant.
+    Attributes:
+        name (str): The name of the plant.
+        height (float): The height of the plant in centimeters.
+        plant_age (int): The age of the plant in days.
+    Methods:
+        show(): Prints the plant's information in a formatted string.
+        get_height(): Returns the height of the plant.
+        set_height(): Sets the height of the plant in a secure manner.
+        get_age(): Returns the age of the plant.
+        set_age(): Sets the age of the plant in a secure manner.
+    '''
+
     def __init__(self, name: str = "default",
                  height: float = 0.0,
                  age: int = 0) -> None:
@@ -51,6 +65,19 @@ class Plant:
                    age=0)
 
     class _Statistics:
+        '''A nested class that tracks the number of times the grow, age
+        and show methods are called for a Plant instance.
+        Attributes:
+            _grow_calls (int):Number of times the grow method has been called.
+            _age_calls (int): Number of times the age method has been called.
+            _show_calls (int):Number of times the show method has been called.
+        Methods:
+            register_grow(): Increments the _grow_calls counter.
+            register_age(): Increments the _age_calls counter.
+            register_show(): Increments the _show_calls counter.
+            display(): Prints the statistics of method calls.
+        '''
+
         def __init__(self) -> None:
             self._grow_calls = 0
             self._age_calls = 0

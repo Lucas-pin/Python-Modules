@@ -1,4 +1,18 @@
 class Plant:
+
+    '''A Plant class that stores information about a plant.
+    Attributes:
+        name (str): The name of the plant.
+        height (float): The height of the plant in centimeters.
+        plant_age (int): The age of the plant in days.
+    Methods:
+        show(): Prints the plant's information in a formatted string.
+        get_height(): Returns the height of the plant.
+        set_height(): Sets the height of the plant in a secure manner.
+        get_age(): Returns the age of the plant.
+        set_age(): Sets the age of the plant in a secure manner.
+    '''
+
     def __init__(self, name: str = "default",
                  height: float = 0.0,
                  age: int = 0) -> None:
@@ -38,6 +52,19 @@ class Plant:
 
 
 class Flower(Plant):
+
+    '''A Flower class that inherits from the Plant class and adds additional
+    attributes and methods specific to flowers.
+    Attributes:
+        color (str): The color of the flower.
+        bloom (bool): A boolean indicating if the flower is blooming or not.
+    Methods:
+        bloom(): Sets the bloom attribute to True,
+        indicating that the flower is blooming.
+    Overrides Methods:
+        show(): Overrides the show method from the Plant class to include
+        additional information about the flower's color and bloom status.'''
+
     def __init__(self, name: str = "default",
                  height: float = 0.0,
                  age: int = 0,
@@ -59,6 +86,17 @@ class Flower(Plant):
 
 
 class Tree(Plant):
+
+    '''A Tree class that inherits from the Plant class and adds additional
+    attributes and methods specific to trees.
+    Attributes:
+        trunk_diameter (float): The diameter of tree's trunk in centimeters.
+    Methods:
+        produce_shade(): Prints information about the tree's shade.
+    Overrides Methods:
+        show(): Overrides the show method from the Plant class to include
+        additional information about the tree's trunk diameter.'''
+
     def __init__(self, name: str = "default",
                  height: float = 0.0,
                  age: int = 0,
@@ -77,6 +115,19 @@ class Tree(Plant):
 
 
 class Vegetable(Plant):
+
+    '''A Vegetable class that inherits from the Plant class and adds additional
+    attributes and methods specific to vegetables.
+    Attributes:
+        harvest_season (str): The season when the vegetable will be harvested.
+        nutritional_value (int): The nutritional value of the vegetable.
+    Overrides Methods:
+        age(): Increases the age of the vegetable and
+        updates its nutritional value.
+        show(): Overrides the show method from the Plant class to include
+        additional information about the vegetable's
+        harvest season and nutritional value.'''
+
     def __init__(self, name: str = "default",
                  height: float = 0.0,
                  age: int = 0,

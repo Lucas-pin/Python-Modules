@@ -1,4 +1,13 @@
 class Plant:
+    '''A Plant class that stores information about a plant.
+    Attributes:
+        name (str): The name of the plant.
+        height (int): The height of the plant in centimeters.
+        plant_age (int): The age of the plant in days.
+    Methods:
+        show(): Prints the plant's information in a formatted string.
+    '''
+
     def __init__(self, name: str = "default",
                  height: int = 0,
                  age: int = 0) -> None:
