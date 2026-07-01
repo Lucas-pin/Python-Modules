@@ -10,7 +10,9 @@ def gen_event() -> typing.Generator[tuple[str, str], None, None]:
         yield random.choice(PLAYERS), random.choice(ACTIONS)
 
 
-def consume_event(events: list[tuple[str, str]]) -> typing.Generator[tuple[str, str], None, None]:
+def consume_event(
+        events: list[tuple[str, str]]
+        ) -> typing.Generator[tuple[str, str], None, None]:
     while events:
         random_event = random.choice(events)
         events.remove(random_event)
