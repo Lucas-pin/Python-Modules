@@ -7,9 +7,10 @@ ACHIEVEMENTS = ['Crafting Genius', 'Strategist', 'World Savior',
                 'Boss Slayer']
 
 
-def gen_player_achievements() -> set:
+def gen_player_achievements() -> set[str]:
     k = random.randint(1, len(ACHIEVEMENTS))
     return set(random.choices(ACHIEVEMENTS, k=k))
+
 
 def main() -> None:
     print("=== Achievement Tracker System ===\n")
@@ -24,9 +25,11 @@ def main() -> None:
     print(f"Player Charlie: {charlie}")
     print(f"Player Dylan: {dylan}")
 
-    print(f"\nAll distintct achievements: {set.union(alice, bob, charlie, dylan)}\n")
+    print(f"\nAll distintct achievements: "
+          f"{set.union(alice, bob, charlie, dylan)}\n")
 
-    print(f"Common achievements: {set.intersection(alice, bob, charlie, dylan)}\n")
+    print(f"Common achievements: "
+          f"{set.intersection(alice, bob, charlie, dylan)}\n")
 
     print(f"Only Alice has: {alice.difference(bob, charlie, dylan)}")
     print(f"Only Bob has: {bob.difference(alice, charlie, dylan)}")
