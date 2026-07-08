@@ -45,6 +45,7 @@ else:
 
             name_new_file = input("Enter new file name (or empty):")
             if name_new_file is not None and name_new_file != "":
+                print(f"Saving data to '{name_new_file}'")
                 new_file = open(name_new_file, "w", encoding="utf-8")
                 new_file.write(new_content + "\n")
                 new_file.close()
@@ -53,3 +54,7 @@ else:
 
     except Exception as ex:
         print(f"Error saving data: {ex}")
+        print("Data not saved")
+    finally:
+        if new_file is not None:
+            new_file.close()
