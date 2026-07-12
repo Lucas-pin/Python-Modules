@@ -9,9 +9,15 @@ class DataProcessor(ABC):
         self._ingested_counter: int = 0
         self._consumed_counter: int = 0
 
+    def get_ingested(self) -> int:
+        return self._ingested_counter
+
+    def get_remaining(self) -> int:
+        return self._ingested_counter - self._consumed_counter
+
     @abstractmethod
     def validate(self, data: Any) -> bool:
-        pass
+        ...
 
     @abstractmethod
     def ingest(self, data: Any) -> None:
@@ -162,9 +168,8 @@ class DataStream():
 
         for process in self._processors:
             type_name = type(process).__name__
-            ingested = process._ingested_counter
-            consumed = process._consumed_counter
-            remaining = ingested - consumed
+            remaining = process.get_remaining()
+            ingested = process.get_ingested()
             print(f"{type_name}: total {ingested} items processed, "
                   f"remaining {remaining} on processor")
 
