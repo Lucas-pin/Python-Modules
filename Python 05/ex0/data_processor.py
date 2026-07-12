@@ -5,7 +5,7 @@ from typing import Any
 class DataProcessor(ABC):
     def __init__(self) -> None:
         self._internal_data: list[str] = []
-        self._consumed_counter: int = -1
+        self._consumed_index: int = -1
 
     @abstractmethod
     def validate(self, data: Any) -> bool:
@@ -18,9 +18,9 @@ class DataProcessor(ABC):
     def output(self) -> tuple[int, str]:
         if not self._internal_data:
             raise IndexError("Ingest more data to be consumed.")
-        self._consumed_counter += 1
+        self._consumed_index += 1
         oldest_item = self._internal_data.pop(0)
-        return self._consumed_counter, oldest_item
+        return self._consumed_index, oldest_item
 
 
 class NumericProcessor(DataProcessor):
