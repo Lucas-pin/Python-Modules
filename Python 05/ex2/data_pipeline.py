@@ -102,8 +102,16 @@ class LogProcessor(DataProcessor):
             if type(data) is not dict:
                 return False
 
-            if (len(data) == 0):
+            if (len(data) != 2):
                 return False
+
+            if "log_level" in data and "log_message" in data:
+                keys = list(data.keys())
+                if keys.index("log_level") > keys.index("log_message"):
+                    return False
+            else:
+                return False
+
             return all(type(k) is str and type(v) is str
                        for k, v in data.items())
 
@@ -119,17 +127,19 @@ class LogProcessor(DataProcessor):
             return all(_validate_dict(_) for _ in data)
 
     def ingest(self, data: dict[str, str] | list[dict[str, str]]) -> None:
+        def _ingest_dict(data: dict[str, str]) -> None:
+            self._internal_data.append(f"{data['log_level']}: "
+                                       f"{data['log_message']}")
+
         if not self.validate(data):
-            raise TypeError("Data must be a dict of string key-value pairs")
+            raise TypeError("Data must be a dict of string key-value pairs."
+                            "Usage: {log_level: <level>, log_message: <msg>}")
 
         if isinstance(data, list):
             for value in data:
-                self._internal_data.extend([f"'{str(k)}': '{str(v)}'"
-                                            for k, v in value.items()])
-
+                _ingest_dict(value)
         elif (isinstance(data, dict)):
-            self._internal_data.extend([f"'{str(k)}': '{str(v)}'"
-                                        for k, v in data.items()])
+            _ingest_dict(data)
 
         super().ingest(data)
 
@@ -193,9 +203,14 @@ class CSVExportPlugin:
         output = ", ".join(array)
         print(output)
 
+
 class JSONExportPlugin:
     def process_output(self, data: list[tuple[int, str]]) -> None:
-        ...
+        print("JSON Output:")
+        dictionary: dict[str, str] = {f"item_{index}": item
+                                      for index, item in data}
+        output = f"{dictionary}"
+        print(output)
 
 
 def main() -> None:
@@ -211,14 +226,16 @@ def main() -> None:
     print("== DataStream statistics ==")
     stream.print_processors_stats()
 
-    print("Registering Numeric Processor\n")
+    print("Registering Processors\n")
     stream.register_processor(numeric)
+    stream.register_processor(text)
+    stream.register_processor(log)
 
     batch_data = ['Hello world', [3.14, -1, 2.71],
                   [{'log_level': 'WARNING',
                     'log_message': 'Telnet access! Use ssh instead'},
                    {'log_level': 'INFO',
-                    'log_message': 'User wil isconnected'}],
+                    'log_message': 'User will disconnected'}],
                   42, ['Hi', 'five']]
 
     print(f"Send first batch of data on stream: {batch_data}\n")
@@ -227,21 +244,28 @@ def main() -> None:
     print("\n== DataStream statistics ==")
     stream.print_processors_stats()
 
-    print("Registering other data processors")
-    stream.register_processor(text)
-    stream.register_processor(log)
+    print("Send 3 processed data from each processor to a CSV plugin:")
+    stream.output_pipeline(3, CSVExportPlugin())
 
-    print("Send the same batch again")
+    print("\n== DataStream statistics ==")
+    stream.print_processors_stats()
+
+    batch_data = [21, ['I love AI', 'LLMs are wonderful', 'Stay healthy'],
+                  [{'log_level': 'ERROR',
+                   'log_message': '500 server crash'},
+                  {'log_level': 'NOTICE', 'log_message':
+                   'Certificateexpires in 10 days'}],
+                  [32, 42, 64, 84, 128, 168], 'World hello']
+    print(f"Send another batch of data: {batch_data}")
     stream.process_stream(batch_data)
 
     print("\n== DataStream statistics ==")
     stream.print_processors_stats()
 
-    print("\nConsume some elements from the data processors: "
-          "Numeric 3, Text 2, Log 1")
-    stream.output_pipeline(3, CSVExportPlugin())
+    print("Send 5 processed data from each processor to a JSON plugin:")
+    stream.output_pipeline(5, JSONExportPlugin())
 
-    print("== DataStream statistics ==")
+    print("\n== DataStream statistics ==")
     stream.print_processors_stats()
 
 
