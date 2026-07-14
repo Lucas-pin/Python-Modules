@@ -106,7 +106,7 @@ class LogProcessor(DataProcessor):
             return all(_validate_dict(_) for _ in data)
 
     def ingest(self, data: dict[str, str] | list[dict[str, str]]) -> None:
-        def _ingest_dict(data) -> None:
+        def _ingest_dict(data: dict[str, str]) -> None:
             self._internal_data.append(f"{data['log_level']}: "
                                        f"{data['log_message']}")
 
