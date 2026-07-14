@@ -97,8 +97,16 @@ class LogProcessor(DataProcessor):
             if type(data) is not dict:
                 return False
 
-            if (len(data) == 0):
+            if (len(data) != 2):
                 return False
+
+            if "log_level" in data and "log_message" in data:
+                keys = list(data.keys())
+                if keys.index("log_level") > keys.index("log_message"):
+                    return False
+            else:
+                return False
+
             return all(type(k) is str and type(v) is str
                        for k, v in data.items())
 
@@ -114,17 +122,19 @@ class LogProcessor(DataProcessor):
             return all(_validate_dict(_) for _ in data)
 
     def ingest(self, data: dict[str, str] | list[dict[str, str]]) -> None:
+        def _ingest_dict(data: dict[str, str]) -> None:
+            self._internal_data.append(f"{data['log_level']}: "
+                                       f"{data['log_message']}")
+
         if not self.validate(data):
-            raise TypeError("Data must be a dict of string key-value pairs")
+            raise TypeError("Data must be a dict of string key-value pairs."
+                            "Usage: {log_level: <level>, log_message: <msg>}")
 
         if isinstance(data, list):
             for value in data:
-                self._internal_data.extend([f"'{str(k)}': '{str(v)}'"
-                                            for k, v in value.items()])
-
+                _ingest_dict(value)
         elif (isinstance(data, dict)):
-            self._internal_data.extend([f"'{str(k)}': '{str(v)}'"
-                                        for k, v in data.items()])
+            _ingest_dict(data)
 
         super().ingest(data)
 
