@@ -1,3 +1,4 @@
-from .creature_factory import CreatureFactory, FlameFactory, AquaFactory
+from .abstract import Creature, CreatureFactory
+from .factories import FlameFactory, AquaFactory
 
-__all__ = ["CreatureFactory", "FlameFactory", "AquaFactory"]
+__all__ = ["Creature", "CreatureFactory", "FlameFactory", "AquaFactory"]
