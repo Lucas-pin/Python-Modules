@@ -14,5 +14,5 @@ class Bloomelle(Creature, HealCapability):
     def attack(self) -> str:
         return "Bloomelle uses Petal Dance!"
 
-    def heal(self, target: str) -> str:
+    def heal(self, target: str = "itself") -> str:
         return f"Bloomelle heals {target} and others for a large amount"
