@@ -13,18 +13,17 @@ def single_battle(opponents: list[tuple[Creature, BattleStrategy]]) -> None:
     print(f"{len(opponents)} opponents involved")
     print()
     try:
-        for creature, strategy in opponents:
-            others = opponents
-            for other_creature, other_strategy in others:
-                if creature is other_creature:
-                    continue
+        i = 0
+        for creature, opponent_strategy in opponents:
+            i += 1
+            for enemy, enemy_strategy in opponents[i:]:
                 print("* Battle *")
-                print(other_creature.describe())
-                print(" vs")
                 print(creature.describe())
+                print(" vs")
+                print(enemy.describe())
                 print(" now fight!")
-                other_strategy.act(other_creature)
-                strategy.act(creature)
+                opponent_strategy.act(creature)
+                enemy_strategy.act(enemy)
                 print()
     except Exception as ex:
         print(f"Battle error, aborting tournament: {ex}")
