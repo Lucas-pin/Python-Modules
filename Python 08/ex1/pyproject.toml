@@ -1,0 +1,22 @@
+[project]
+name = "Module-08"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Lucas-pin",email = "lucasfacundopin@gmail.com"}
+]
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "requests (>=2.34.2,<3.0.0)",
+    "pandas (<3.0)",
+    "matplotlib (<3.11)",
+    "numpy (<2.5)",
+    "importlib (>=1.0.4,<2.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "Module-08", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
