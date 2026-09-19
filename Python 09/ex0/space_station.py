@@ -24,8 +24,8 @@ class SpaceStation(BaseModel):
         print(f"Crew: {self.crew_size}")
         print(f"Power: {self.power_level:.2f}")
         print(f"Oxygen: {self.oxygen_level:.2f}")
-        print(f"Last Maintenance: \
-              {self.last_maintenance.strftime('%Y-%m-%d %H:%M:%S')}")
+        print("Last Maintenance: "
+              f"{self.last_maintenance.strftime('%Y-%m-%d %H:%M:%S')}")
         print("Status: "
               f"{'Operational' if self.is_operational else 'Inoperative'}")
         if self.notes is not None:
@@ -53,7 +53,8 @@ class main():
         invalid_station.display_info()
 
     except ValidationError as ex:
-        error_desc = [f"{str(error['loc'][0])}: {str(error['msg'])}"
+        error_desc = [f"{'.'.join(map(str, error['loc'])) or 'model'}: "
+                      f"{error['msg']}"
                       for error in ex.errors()]
         for error in error_desc:
             print(error)
