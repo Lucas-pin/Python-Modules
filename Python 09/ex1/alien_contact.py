@@ -1,8 +1,8 @@
 from enum import Enum
 from pydantic import BaseModel, Field, ValidationError, PastDatetime
-from pydantic import model_validator
+from pydantic import model_validator, field_validator
 from typing import Annotated
-from datetime import datetime
+import json
 
 
 class ContactType(str, Enum):
@@ -14,7 +14,7 @@ class ContactType(str, Enum):
 
 class AlienContact(BaseModel):
     contact_id: Annotated[str, Field(min_length=5, max_length=15)]
-    timestamps: PastDatetime
+    timestamp: PastDatetime
     location: Annotated[str, Field(min_length=3, max_length=100)]
     contact_type: ContactType
     signal_strength: Annotated[float, Field(ge=0.0, le=10.0)]
@@ -23,11 +23,12 @@ class AlienContact(BaseModel):
     message_received: Annotated[str | None, Field(max_length=500)]
     is_verified: bool = False
 
-    @model_validator(mode="after")
-    def validate_id(self) -> "AlienContact":
-        if not self.contact_id.startswith("AC"):
+    @field_validator("contact_id")
+    @classmethod
+    def validate_id(cls, value: str) -> str:
+        if not value.startswith("AC"):
             raise ValueError("Contact ID must start with 'AC' (Alien Contact)")
-        return self
+        return value
 
     @model_validator(mode="after")
     def validate_physical_contact(self) -> "AlienContact":
@@ -69,40 +70,21 @@ class AlienContact(BaseModel):
 def main() -> None:
     print("Alien Contact Log Validation")
     print("="*50)
-    try:
-        contact: AlienContact = AlienContact(
-            contact_id="AC_2026_001",
-            timestamps=datetime.now(),
-            location="Area 51, Nevada",
-            contact_type=ContactType.RADIO,
-            signal_strength=8.5,
-            duration_minutes=45,
-            witness_count=5,
-            message_received="Greetings from Zeta Reticuli",
-            is_verified=True
-        )
-
-        contact.display_contact_info()
-        print("="*50)
-        print("Expected validation error:")
-        invalid_contact: AlienContact = AlienContact(
-            contact_id="AC_2026_002",
-            timestamps=datetime.now(),
-            location="Area 51, Nevada",
-            contact_type=ContactType.TELEPATHIC,
-            signal_strength=8.5,
-            duration_minutes=45,
-            witness_count=2,
-            message_received="Greetings from Zeta Reticuli",
-            is_verified=True
-        )
-        invalid_contact.display_contact_info()
-    except ValidationError as ex:
-        error_desc = [f"{'.'.join(map(str, error['loc'])) or 'model'}: "
-                      f"{error['msg']}"
-                      for error in ex.errors()]
-        for error in error_desc:
-            print(error)
+    with open("../generated_data/invalid_contacts.json", "r") as f:
+        raw_data: list[dict[str, str]] = json.loads(f.read())
+        valid_contacts: list[AlienContact] = []
+        for index, item in enumerate(raw_data):
+            try:
+                contact = AlienContact.model_validate(item)
+                valid_contacts.append(contact)
+                contact.display_contact_info()
+                print("-"*50)
+            except ValidationError as ex:
+                for error in ex.errors():
+                    field = error["loc"][-1] \
+                            if error["loc"] else "Object error"
+                    print(f"[Error] Object index: {index} - "
+                          f"Invalid field: '{field}' : {error['msg']}")
 
 
 if __name__ == "__main__":

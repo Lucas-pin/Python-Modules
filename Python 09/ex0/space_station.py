@@ -1,7 +1,7 @@
 from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic import PastDatetime, ValidationError
-from datetime import datetime
+import json
 
 
 class SpaceStation(BaseModel):
@@ -32,32 +32,25 @@ class SpaceStation(BaseModel):
             print(f"Notes: {self.notes}")
 
 
-class main():
+def main() -> None:
     print("Space Station Data Validation")
     print("="*50)
-    try:
-        station: SpaceStation = SpaceStation(
-            station_id="ISS001", name="Internation Space Station",
-            crew_size=6, power_level=85.5,
-            oxygen_level=92.3, last_maintenance=datetime.now(),
-            is_operational=True, notes="Amazing place to work!")
 
-        station.display_info()
-        print("="*50)
-        invalid_station: SpaceStation = SpaceStation(
-            station_id="ISS001", name="Invalid Station",
-            crew_size=85, power_level=85.5,
-            oxygen_level=105, last_maintenance=datetime.now(),
-            is_operational=True)
-
-        invalid_station.display_info()
-
-    except ValidationError as ex:
-        error_desc = [f"{'.'.join(map(str, error['loc'])) or 'model'}: "
-                      f"{error['msg']}"
-                      for error in ex.errors()]
-        for error in error_desc:
-            print(error)
+    with open("../generated_data/invalid_stations.json", "r") as f:
+        raw_data: list[dict[str, str]] = json.loads(f.read())
+        valid_contacts: list[SpaceStation] = []
+        for index, item in enumerate(raw_data):
+            try:
+                station = SpaceStation.model_validate(item)
+                valid_contacts.append(station)
+                station.display_info()
+                print("-"*50)
+            except ValidationError as ex:
+                for error in ex.errors():
+                    field = error["loc"][1] \
+                        if len(error["loc"]) > 1 else "Object error"
+                    print(f"[Error] Object index {index} - "
+                          f"Invalid field: '{field}' : {error['msg']}")
 
 
 if __name__ == "__main__":
