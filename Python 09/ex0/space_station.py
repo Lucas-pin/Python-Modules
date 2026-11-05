@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic import PastDatetime, ValidationError

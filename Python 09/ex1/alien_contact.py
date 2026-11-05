@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from enum import Enum
 from pydantic import BaseModel, Field, ValidationError, PastDatetime
 from pydantic import model_validator
